@@ -1,17 +1,16 @@
 "use strict";
 const vscode = require("vscode");
 const request = require("request");
-var fs = require('fs');
 var roomList = [];
 var configuration = vscode.workspace.getConfiguration('gitter');
-var token = configuration.get('token');
+var personalToken = configuration.get('personalToken');
 var API_VERSION = '/v1';
 var BASE_URL = 'https://api.gitter.im' + API_VERSION;
 var API_ROOMS = '/rooms';
 var API_MESSAGES = '/chatMessages';
 class Gitter {
     GetRoomList(callback, data) {
-        var params = '?access_token=' + token;
+        var params = '?access_token=' + personalToken;
         roomList.length = 0;
         var __request = function(urls, callback) {
             var results = {},
@@ -59,41 +58,36 @@ class Gitter {
         if (!this._statusBarItem) {
             this._statusBarItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left);
         }
+        var postUrl = BASE_URL + API_ROOMS + '/' + roomId + API_MESSAGES + '?access_token=' + personalToken;
         request.post({
-            url: BASE_URL + API_ROOMS + '/' + roomId + API_MESSAGES,
-            formData: data
+            url: postUrl,
+            form: data
         }, function(error, response, body) {
             if (!error && response.statusCode == 200) {
                 that._statusBarItem.text = "$(comment) Message sent successfully!";
                 that._statusBarItem.show();
                 setTimeout(function() { that._statusBarItem.hide(); }, 5000);
-            }
+            } else {}
         });
     }
     QuickPick() {
-        return vscode.window.showQuickPick(roomList, { matchOnDescription: true, placeHolder: 'Select a room' });
+        return vscode.window.showQuickPick(roomList.sort(), { matchOnDescription: true, placeHolder: 'Select a room' });
     }
-    Send(roomId, data) {
+    Send(data) {
         var sendMsg = function(roomId, data) {
             if (data) {
                 var g = new Gitter();
                 g.ApiCall(roomId, data);
-            }
+            } else {}
         };
-        // sending a message to a specified channel/user/group
-        if (roomId) {
-            sendMsg(roomId, data);
-        } else {
-            var gitter = new Gitter;
-            var pick = gitter.QuickPick();
-            pick.then(item => {
-                if (item) {
-                    roomId = item.id;
-                    data.text = item.id;
-                    sendMsg(roomId, data);
-                }
-            });
-        }
+        var gitter = new Gitter;
+        var pick = gitter.QuickPick();
+        pick.then(item => {
+            if (item) {
+                var roomId = item.id;
+                sendMsg(roomId, data);
+            }
+        });
     }
     SendMessage() {
         var options = {
@@ -114,7 +108,11 @@ class Gitter {
             return; // No open text editor
         }
         var selection = editor.selection;
-        var text = '```' + editor.document.getText(selection) + '```';
+        if (editor.document.languageId == "markdown") {
+            var text = editor.document.getText(selection) + '\n######[Sent from VSCode](https://github.com/scrthq/vscode-gitter/)';
+        } else {
+            var text = '#####_Code snippet_\n\n```' + editor.document.languageId + '\n' + editor.document.getText(selection) + '\n```\n######[Sent from VSCode](https://github.com/scrthq/vscode-gitter/)';
+        }
         var data = {
             text: text
         };
@@ -125,7 +123,13 @@ class Gitter {
         if (!editor) {
             return; // No open text editor
         }
-        var text = '```' + editor.document.getText() + '```';
+        var text = '';
+        if (editor.document.languageId == "markdown") {
+            text = editor.document.getText() + '\n######[Sent from VSCode](https://github.com/scrthq/vscode-gitter/)';
+        } else {
+            var fileName = editor.document.fileName.replace(/^.*[\\\/]/, '');
+            text = '#####_' + fileName + '_\n\n```' + editor.document.languageId + '\n' + editor.document.getText() + '\n```\n######[Sent from VSCode](https://github.com/scrthq/vscode-gitter/)';
+        }
         var data = {
             text: text
         };
@@ -139,14 +143,22 @@ function activate(context) {
     // The command has been defined in the package.json file
     // Now provide the implementation of the command with  registerCommand
     // The commandId parameter must match the command field in package.json
-    if (token) {
+    if (personalToken) {
+
+        console.log('vscode-gitter is now active!');
+
+        // create a new Gitter instance
         let gitter = new Gitter();
+
         // send typed message
         vscode.commands.registerCommand('gitter.gitterSendMsg', () => gitter.SendMessage());
+
         // send selected text as a message
         vscode.commands.registerCommand('gitter.gitterSendSelection', () => gitter.SendSelection());
+
         // send current file
         vscode.commands.registerCommand('gitter.gitterSendFile', () => gitter.SendFile());
+
         // Add to a list of disposables which are disposed when this extension is deactivated.
         context.subscriptions.push(gitter);
     } else {
