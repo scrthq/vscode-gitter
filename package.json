@@ -1,10 +1,10 @@
 {
     "name": "vscode-gitter",
-    "displayName": "Gitter",
-    "description": "Send messages to Gitter from Visual Studio Code",
+    "displayName": "Send to Gitter",
+    "description": "Send messages and code snippets to Gitter from Visual Studio Code",
     "icon": "icon.png",
-    "version": "0.0.1",
-    "publisher": "SCRT HQ",
+    "version": "1.0.0",
+    "publisher": "scrthq",
     "author": {
         "name": "Nate Ferrell",
         "email": "nate@scrthq.com",
@@ -74,7 +74,16 @@
                 "gitter.personalToken": {
                     "type": "string",
                     "default": "",
-                    "description": "Gitter Personal Access Token"
+                    "description": "Your Gitter Personal Access Token"
+                },
+                "gitter.renderMarkdown": {
+                    "type": "string",
+                    "enum": [
+                        "AsCodeBlock",
+                        "AsMarkdown"
+                    ],
+                    "default": "AsMarkdown",
+                    "description": "Option to render Markdown snippets as Markdown or as a code block containing Markdown text. Defaults to AsMarkdown"
                 }
             }
         }
