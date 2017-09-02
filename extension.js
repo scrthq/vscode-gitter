@@ -4,6 +4,7 @@ const request = require("request");
 var roomList = [];
 var configuration = vscode.workspace.getConfiguration('gitter');
 var personalToken = configuration.get('personalToken');
+var closeLine = '\n######[Sent from VSCode](https://github.com/scrthq/vscode-gitter/)';
 var API_VERSION = '/v1';
 var BASE_URL = 'https://api.gitter.im' + API_VERSION;
 var API_ROOMS = '/rooms';
@@ -98,6 +99,7 @@ class Gitter {
         };
         vscode.window.showInputBox(options).then(text => {
             if (text) {
+                text = text + closeLine
                 var data = {
                     text: text
                 };
@@ -108,14 +110,15 @@ class Gitter {
     SendSelection() {
         var editor = vscode.window.activeTextEditor;
         var renderMarkdown = vscode.workspace.getConfiguration('gitter').get('renderMarkdown');
+        var lang = editor.document.languageId;
         if (!editor) {
             return; // No open text editor
         }
         var selection = editor.selection;
-        if (editor.document.languageId == "markdown" && renderMarkdown == "AsMarkdown") {
+        if (lang == "markdown" && renderMarkdown == "AsMarkdown") {
             var text = editor.document.getText(selection) + '\n######[Sent from VSCode](https://github.com/scrthq/vscode-gitter/)';
         } else {
-            var text = '#####_Code snippet_\n\n```' + editor.document.languageId + '\n' + editor.document.getText(selection) + '\n```\n######[Sent from VSCode](https://github.com/scrthq/vscode-gitter/)';
+            var text = '#####_' + lang + ' snippet_\n\n```' + lang + '\n' + editor.document.getText(selection) + '\n```' + closeLine;
         }
         var data = {
             text: text
@@ -125,15 +128,16 @@ class Gitter {
     SendFile() {
         var editor = vscode.window.activeTextEditor;
         var renderMarkdown = vscode.workspace.getConfiguration('gitter').get('renderMarkdown');
+        var lang = editor.document.languageId;
         if (!editor) {
             return; // No open text editor
         }
         var text = '';
-        if (editor.document.languageId == "markdown" && renderMarkdown == "AsMarkdown") {
-            text = editor.document.getText() + '\n######[Sent from VSCode](https://github.com/scrthq/vscode-gitter/)';
+        if (lang == "markdown" && renderMarkdown == "AsMarkdown") {
+            text = editor.document.getText() + closeLine;
         } else {
             var fileName = editor.document.fileName.replace(/^.*[\\\/]/, '');
-            text = '#####_' + fileName + '_\n\n```' + editor.document.languageId + '\n' + editor.document.getText() + '\n```\n######[Sent from VSCode](https://github.com/scrthq/vscode-gitter/)';
+            text = '#####_' + fileName + ' [' + lang + ']_\n\n```' + lang + '\n' + editor.document.getText() + '\n```' + closeLine;
         }
         var data = {
             text: text
