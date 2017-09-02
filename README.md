@@ -22,7 +22,7 @@ This extension contributes the following settings:
 
 ## Known Issues
 
-None! :tada:
+None at the moment
 
 ## Release Notes
 
