@@ -1,6 +1,4 @@
-# vscode-gitter README
-
-This is the README for your extension "vscode-gitter". After writing up a brief description, we recommend including the following sections.
+# Send to Gitter - Visual Studio Code extension
 
 ## Features
 
