@@ -99,7 +99,7 @@ class Gitter {
         };
         vscode.window.showInputBox(options).then(text => {
             if (text) {
-                text = text + closeLine
+                text = text + closeLine;
                 var data = {
                     text: text
                 };

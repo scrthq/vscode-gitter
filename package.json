@@ -3,7 +3,7 @@
     "displayName": "Send to Gitter",
     "description": "Send messages and code snippets to Gitter from Visual Studio Code",
     "icon": "icon.png",
-    "version": "1.0.2",
+    "version": "1.0.3",
     "publisher": "scrthq",
     "author": {
         "name": "Nate Ferrell",

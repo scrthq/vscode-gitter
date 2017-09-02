@@ -20,12 +20,13 @@ This extension contributes the following settings:
 * `gitter.personalToken`: your Personal Access Token (required)
 * `gitter.renderMarkdown`: Option to render Markdown snippets as Markdown or as a code block containing Markdown text. Defaults to AsMarkdown (optional)
 
-## Known Issues
-
-None at the moment
-
 ## Release Notes
 
 ### 1.0.0
 
 - Initial release of extension
+
+### 1.0.3
+
+- fixed closeLine not applying to all commands
+- fixed missing semicolon in extension.js
