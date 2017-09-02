@@ -18,7 +18,7 @@
     "bugs": {
         "url": "https://github.com/scrthq/vscode-gitter/issues"
     },
-    "license": "SEE LICENSE IN LICENSE",
+    "license": "SEE LICENSE IN LICENSE.txt",
     "galleryBanner": {
         "color": "#FFFFFF",
         "theme": "light"
