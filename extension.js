@@ -116,7 +116,7 @@ class Gitter {
         }
         var selection = editor.selection;
         if (lang == "markdown" && renderMarkdown == "AsMarkdown") {
-            var text = editor.document.getText(selection) + '\n######[Sent from VSCode](https://github.com/scrthq/vscode-gitter/)';
+            var text = editor.document.getText(selection) + closeLine;
         } else {
             var text = '#####_' + lang + ' snippet_\n\n```' + lang + '\n' + editor.document.getText(selection) + '\n```' + closeLine;
         }
