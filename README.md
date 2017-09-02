@@ -1,8 +1,10 @@
-# Send to Gitter - Visual Studio Code extension
+# Send to Gitter
 
 ## Features
 
 Send messages, code snippets, or full files to any Gitter room or one-to-one conversation you are part of directly from VSCode!
+
+[Send to Gitter on the VSCode Marketplace](https://marketplace.visualstudio.com/items?itemName=scrthq.vscode-gitter)
 
 ![Examples](/examples.png)
 

@@ -4,7 +4,7 @@ const request = require("request");
 var roomList = [];
 var configuration = vscode.workspace.getConfiguration('gitter');
 var personalToken = configuration.get('personalToken');
-var closeLine = '\n######[Sent from VSCode](https://github.com/scrthq/vscode-gitter/)';
+var closeLine = '\n######[Sent from VSCode](https://marketplace.visualstudio.com/items?itemName=scrthq.vscode-gitter)';
 var API_VERSION = '/v1';
 var BASE_URL = 'https://api.gitter.im' + API_VERSION;
 var API_ROOMS = '/rooms';
